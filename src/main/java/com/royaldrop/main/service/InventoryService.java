@@ -8,4 +8,5 @@ public interface InventoryService {
     Inventory createInventory(Inventory inventory);
     List<Inventory> getAllInventories();
     // Add other necessary methods as needed
+	Inventory findById(Long id);
 }

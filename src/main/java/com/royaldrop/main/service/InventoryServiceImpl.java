@@ -1,6 +1,7 @@
 package com.royaldrop.main.service;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +33,12 @@ public class InventoryServiceImpl implements InventoryService {
     public List<Inventory> getAllInventories() {
         return inventoryRepository.findAll();
     }
+
+	@Override
+	public Inventory findById(Long id) {
+		// TODO Auto-generated method stub
+		return inventoryRepository.findById(id).orElse(null);
+	}
     
     // Implement other methods as needed
 }
