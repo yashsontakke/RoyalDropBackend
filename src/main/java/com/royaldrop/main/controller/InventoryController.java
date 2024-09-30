@@ -39,7 +39,7 @@ public class InventoryController {
 
 	    @GetMapping("/{id}")
 	    public ResponseEntity<Inventory> getProductById(@PathVariable("id") Long id) {
-//	    	System.out.print(id+" idiidi");
+
 	        try {
 	            // Fetch product from the repository
 	            Inventory product = inventoryService.findById(id);
@@ -56,9 +56,5 @@ public class InventoryController {
 	            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 	        }
 	    }
-//	    @GetMapping
-//	    public ResponseEntity<List<Inventory>> getAllInventories() {
-//	        List<Inventory> inventories = inventoryService.getAllInventories();
-//	        return new ResponseEntity<>(inventories, HttpStatus.OK);
-//	    }
+
 }
