@@ -33,6 +33,8 @@ public class Deliveries {
     private String customerAddress;
 
     private String customerMobileNumber;
+    
+    private Long productId;
 
     // Many deliveries belong to one delivery agent
     @ManyToOne
@@ -40,7 +42,7 @@ public class Deliveries {
     private DeliveryAgent deliveryAgent;
     
 
-    public Deliveries(String customerName, LocalDate expectedDateOfDelivery, String customerAddress, String customerMobileNumber, DeliveryAgent deliveryAgent) {
+    public Deliveries(String customerName, LocalDate expectedDateOfDelivery, String customerAddress, String customerMobileNumber, DeliveryAgent deliveryAgent , Long productId ) {
         this.customerName = customerName;
         this.expectedDateOfDelivery = expectedDateOfDelivery;
         this.customerAddress = customerAddress;
@@ -53,6 +55,7 @@ public class Deliveries {
         } else {
             this.status = "Delivered";
         }
+        this.productId = productId ;
     }
 
 }

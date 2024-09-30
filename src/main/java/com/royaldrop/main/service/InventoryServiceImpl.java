@@ -39,6 +39,33 @@ public class InventoryServiceImpl implements InventoryService {
 		// TODO Auto-generated method stub
 		return inventoryRepository.findById(id).orElse(null);
 	}
+
+	 @Override
+	    public void reduceProductQuantity(Long productId, int quantity) {
+	        // Fetch the product from the repository
+	        Inventory product = inventoryRepository.findById(productId)
+	                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+	        // Check if the current quantity is sufficient for delivery
+	        if (product.getQuantity() >= quantity) {
+	            // Reduce the quantity
+	            product.setQuantity(product.getQuantity() - quantity);
+	            inventoryRepository.save(product); // Save the updated product
+	        } else {
+	            throw new IllegalArgumentException("Insufficient quantity for delivery");
+	        }
+	    }
+
+	    @Override
+	    public void increaseProductQuantity(Long productId, int quantity) {
+	        // Fetch the product from the repository
+	        Inventory product = inventoryRepository.findById(productId)
+	                .orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+	        // Increase the quantity
+	        product.setQuantity(product.getQuantity() + quantity);
+	        inventoryRepository.save(product); // Save the updated product
+	    }
     
     // Implement other methods as needed
 }

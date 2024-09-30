@@ -1,47 +1,71 @@
 package com.royaldrop.main.controller;
 
-import java.util.List;
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.royaldrop.main.dao.DeliveryAgent;
+import com.royaldrop.main.dao.Deliveries;
+import com.royaldrop.main.dto.DeliveriesDTO;
+import com.royaldrop.main.dto.DeliveryAgentDTO;
+import com.royaldrop.main.repository.DeliveriesRepository;
 import com.royaldrop.main.service.DeliveryAgentService;
 
 @RestController
-@RequestMapping("/api/delivery-agent")
+@RequestMapping("/api/delivery-agents")
 public class DeliveryAgentController {
 
-    @Autowired
-    private DeliveryAgentService deliveryAgentService;
+	 @Autowired
+	    private DeliveriesRepository deliveriesRepository;
 
-    @GetMapping
-    public List<DeliveryAgent> getAllAgents() {
-        return deliveryAgentService.getAllDeliveryAgents();
-    }
+	 @Autowired
+	 private DeliveryAgentService deliveryAgentService;
+	    // Convert Deliveries to DeliveriesDTO
+	    private DeliveriesDTO convertToDTO(Deliveries delivery) {
+	        return new DeliveriesDTO(
+	            delivery.getId(),
+	            delivery.getCustomerName(),
+	            delivery.getExpectedDateOfDelivery().toString(),
+	            delivery.getStatus(),
+	            delivery.getCustomerAddress(),
+	            delivery.getCustomerMobileNumber(),
+	            delivery.getDeliveryAgent().getDeliveryAgentId(),
+	            delivery.getProductId()
+	        );
+	    }
+	    
+	    @GetMapping("/{id}")
+	    public ResponseEntity<DeliveryAgentDTO> getDeliveryAgentById(@PathVariable Long id) {
+	        // Fetch the DeliveryAgentDTO using the service layer
+	        DeliveryAgentDTO agent = deliveryAgentService.getDeliveryAgentById(id);	        
+	        
+	        // Check if the agent exists
+	        if (agent != null) {
+	            System.out.print(agent.getAgentMobileNumber());
+	            // Return the agent data with an OK status
+	            return ResponseEntity.ok(agent);
+	        } else {
+	            // If agent not found, return 404 Not Found
+	            return ResponseEntity.notFound().build();
+	        }
+	    }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<DeliveryAgent> getAgentById(@PathVariable Long id) {
-        Optional<DeliveryAgent> agent = deliveryAgentService.getDeliveryAgentById(id);
-        return agent.map(ResponseEntity::ok)
-                    .orElseGet(() -> ResponseEntity.notFound().build());
-    }
+	    public DeliveriesDTO saveDelivery(Deliveries delivery) {
+	        Deliveries savedDelivery = deliveriesRepository.save(delivery);
+	        return convertToDTO(savedDelivery);
+	    }
 
-    @PostMapping
-    public DeliveryAgent createAgent(@RequestBody DeliveryAgent agent) {
-        return deliveryAgentService.saveDeliveryAgent(agent);
-    }
+//	    public List<DeliveriesDTO> getDeliveriesByAgent(DeliveryAgent agent) {
+//	        return deliveriesRepository.findByDeliveryAgent(agent).stream()
+//	                .map(this::convertToDTO)
+//	                .collect(Collectors.toList());
+//	    }
 
-    @DeleteMapping("/{id}")
-    public void deleteAgent(@PathVariable Long id) {
-        deliveryAgentService.deleteDeliveryAgent(id);
-    }
+	    public DeliveriesDTO getDeliveryById(Long id) {
+	        return deliveriesRepository.findById(id)
+	                .map(this::convertToDTO)
+	                .orElse(null);
+	    }
 }

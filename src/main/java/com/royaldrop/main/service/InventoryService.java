@@ -9,4 +9,7 @@ public interface InventoryService {
     List<Inventory> getAllInventories();
     // Add other necessary methods as needed
 	Inventory findById(Long id);
+	void reduceProductQuantity(Long productId, int quantity);
+	void increaseProductQuantity(Long productId, int quantity);
 }
+
