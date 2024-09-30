@@ -12,6 +12,18 @@ import com.royaldrop.main.dao.Deliveries;
 @Repository
 public interface DeliveriesRepository extends JpaRepository<Deliveries, Long> {
 
-	@Query("SELECT d FROM Deliveries d WHERE d.deliveryAgent.id = :agentId")
-	List<Deliveries> findByDeliveryAgentId(@Param("agentId") Long agentId);
+	@Query("SELECT d FROM Deliveries d WHERE d.deliveryAgent.deliveryAgentId = :agentId " +
+	           "AND d.status = 'pending' AND DATE(d.expectedDateOfDelivery) = CURRENT_DATE")
+	    List<Deliveries> findTodaysPendingDeliveries(@Param("agentId") Long agentId);
+
+	    @Query("SELECT d FROM Deliveries d WHERE d.deliveryAgent.deliveryAgentId = :agentId " +
+	           "AND d.status = 'pending' AND DATE(d.expectedDateOfDelivery) != CURRENT_DATE")
+	    List<Deliveries> findPendingDeliveriesNotToday(@Param("agentId") Long agentId);
+
+	    @Query("SELECT d FROM Deliveries d WHERE d.deliveryAgent.deliveryAgentId = :agentId " +
+	           "AND d.status = 'delayed'")
+	    List<Deliveries> findDelayedDeliveries(@Param("agentId") Long agentId);
+	    
+	    @Query("SELECT d FROM Deliveries d WHERE d.deliveryAgent.id = :agentId")
+		List<Deliveries> findByDeliveryAgentId(@Param("agentId") Long agentId);
 }

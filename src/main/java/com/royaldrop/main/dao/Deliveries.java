@@ -51,9 +51,9 @@ public class Deliveries {
         
         // Set status to "Pending" if expected date exceeds the current date
         if (expectedDateOfDelivery.isAfter(LocalDate.now())) {
-            this.status = "Pending";
+            this.status = "Delayed";
         } else {
-            this.status = "Delivered";
+            this.status = "Pending";
         }
         this.productId = productId ;
     }

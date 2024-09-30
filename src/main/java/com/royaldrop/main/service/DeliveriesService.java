@@ -67,4 +67,24 @@ public class DeliveriesService {
 
 	        return deliveryDTOs;
 	    }
+	    
+	    public List<Deliveries> getTodaysPendingDeliveries(Long agentId) {
+	        return deliveriesRepository.findTodaysPendingDeliveries(agentId);
+	    }
+	    
+	    public List<Deliveries> getPendingDeliveriesNotToday(Long agentId) {
+	        return deliveriesRepository.findPendingDeliveriesNotToday(agentId);
+	    }
+	    
+	    public List<Deliveries> getDelayedDeliveries(Long agentId) {
+	        return deliveriesRepository.findDelayedDeliveries(agentId);
+	    }
+	    
+
+	    public Deliveries updateDeliveryStatus(Long deliveryId) {
+	    	Deliveries delivery = deliveriesRepository.findById(deliveryId)
+	                .orElseThrow(() -> new RuntimeException("Delivery not found"));
+	        delivery.setStatus("Delivered"); // Update status to Delivered
+	        return deliveriesRepository.save(delivery);
+	    }
 }
